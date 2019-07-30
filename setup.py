@@ -7,7 +7,7 @@ CWD = os.getcwd();
 XLS_DIR = 'xlsFiles'
 TYPE_DIR = ['weekday', 'weekend'];
 TIME_NAMES = ['WT', 'TT'];
-SUBDIR_NAMES = ['FILES', 'AVG', 'MODELS', 'INT'];
+SUBDIR_NAMES = ['FILES', 'AVG', 'MODELS', 'INT', 'RESULT'];
 
 if(not os.path.isdir(CWD + '/' + XLS_DIR)):
     subprocess.call(['mkdir', CWD + '/' + XLS_DIR]);

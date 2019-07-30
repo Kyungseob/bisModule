@@ -78,7 +78,7 @@ def makeAvgWT(dayType):
     resultdf.to_csv(avgPath + 'WT_AVG.csv', index=False);
 
 def makeINT(dayType):
-    base = CWD + '/' + dayType + '/';
+    base = CWD + '/' + dayType;
     ttPath = base + TT;
     ttAvgPath = base + TT_AVG + 'TT_AVG.csv';
     ttIntPath = base + TT_INT;

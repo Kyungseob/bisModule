@@ -4,7 +4,6 @@ import math;
 import os;
 import utils;
 import nn;
-from datetime import datetime;
 
 CWD = os.getcwd();
 
@@ -15,6 +14,7 @@ def train(dayType):
     ttModel = base + 'TT/MODEL/';
     wtModel = base + 'WT/MODEL/';
     files = [f for f in os.listdir(tt) if (f.endswith('.csv'))];
+    files.sort();
     sizeParam = utils.getSizeParam(tt + files[0]);
     flatten = [];
     for file in files:
@@ -34,6 +34,6 @@ def train(dayType):
         testY = np.reshape(testY, (cutIdx-1, sizeParam[1]));
     model = nn.init(sizeParam[1], trainX.shape);
     model.fit(trainX, trainY, epochs=1500, validation_data=(testX, testY), verbose=2);
-    model.save_weights(datetime.now().strftime("%Y-%m-%d") + '_' + str(i+1) + '.h5');
+    model.save_weights(utils.makeDateFileName() + '_' + str(i+1) + '.h5');
 
 train('weekday');

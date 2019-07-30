@@ -81,3 +81,5 @@ def getSizeParam(file):
     sizeParam.append(total);
     return sizeParam;
 
+def makeDateFileName():
+    return datetime.now().strftime("%Y-%m-%d");
