@@ -20,7 +20,7 @@ def idxToTime(idx):
 def makeName(fileName):
     fileName = fileName.split('_')[1];
     splittedDates = fileName.split('-');
-    dayType = 'weekday'
+    dayType = 'weekday';
     idx = date(int(splittedDates[0]), int(splittedDates[1]), int(splittedDates[2])).weekday();
     if(idx > 4):
         dayType = 'weekend';
@@ -32,7 +32,7 @@ def makeName(fileName):
 def strToUnixTimestamp(str):
     if (pd.isnull(str) or str=='NaT'):
         return float('nan');
-    dt = datetime.strptime(str, "%Y-%m-%d %H:%M:%S")
+    dt = datetime.strptime(str, "%Y-%m-%d %H:%M:%S");
     ts = time.mktime(dt.timetuple());
     return ts;
 
@@ -76,10 +76,29 @@ def getSizeParam(file):
     dArray = df.as_matrix();
     total = dArray.shape[0] * dArray.shape[1];
     part = total / 6;
-    print(dArray.shape, total, part)
     sizeParam = range(0, total, part);
     sizeParam.append(total);
     return sizeParam;
 
 def makeDateFileName():
     return datetime.now().strftime("%Y-%m-%d");
+
+def concatZero(val):
+    if(val < 10):
+        return '0' + str(val);
+    return str(val);
+
+def secToIdx(sec):
+    hour = int(math.floor(sec/3600));
+    minute = int(math.floor((sec%3600)/60));
+    if(hour > 23):
+        hour = hour - 24;
+    return (hour * 4 + int(math.floor(minute/15)));
+
+def secToString(sec):
+    hour = int(math.floor(sec/3600));
+    minute = int(math.floor((sec%3600)/60));
+    sec = int(math.floor((sec%3600)%60));
+    if (hour > 23):
+        hour = hour - 24;
+    return concatZero(hour) + ':' + concatZero(minute) + ':' + concatZero(sec);

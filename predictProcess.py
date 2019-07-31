@@ -19,8 +19,10 @@ WT_AVG = base + '/WT/AVG/WT_AVG.csv';
 
 def predict(file, mdPath, intPath):
     sizeParam = utils.getSizeParam(intPath + file);
+    print(sizeParam);
     df = pd.read_csv(intPath + file, index_col=False);
     arr = df.as_matrix();
+    print(arr.shape);
     all = [];
     all.append(arr.flatten().T);
     all = np.array(all);
@@ -48,16 +50,13 @@ def interpolate(pred, avgPath):
                 pred[i, j] = avg[i, j];
     return pred;
 
-def makeTimeTable():
-    
-    return ;
-
 file='20180917_MON.csv';
-ttPred = predict(file, TT_MODEL, TT_INT);
+
 wtPred = predict(file, WT_MODEL, WT_INT);
+ttPred = predict(file, TT_MODEL, TT_INT);
 
 ttIntPred = interpolate(ttPred, TT_AVG);
-wtIntPred = interpolate(wtPred, WT_AVG);;
+wtIntPred = interpolate(wtPred, WT_AVG);
 
 tt = pd.DataFrame(data=ttPred).to_csv(TT_RESULT + file, index=False);
 wt = pd.DataFrame(data=wtPred).to_csv(WT_RESULT + file, index=False);

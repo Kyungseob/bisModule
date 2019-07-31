@@ -3,3 +3,4 @@ weekend/*
 xlsFiles/*
 *.pyc
 test/*
+getModel.sh

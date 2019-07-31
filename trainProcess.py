@@ -36,6 +36,9 @@ def train(dayType):
         model = nn.init(sizeParam[1], trainX.shape);
         model.fit(trainX, trainY, epochs=500, validation_data=(testX, testY), verbose=2);
     	model.save_weights(ttModel + '2019-07-30' + '_' + str(i+1) + '.h5');
+    files = [f for f in os.listdir(wt) if (f.endswith('.csv'))];
+    files.sort();
+    sizeParam = utils.getSizeParam(wt + files[0]);
     flatten = [];
     for file in files:
         df = pd.read_csv(wt + file, index_col=False);
