@@ -99,20 +99,16 @@ def makeTT(departure, arrival):
 
     return result;
 
-#fileName = 'test_2017-01-04_11';
+files = [f for f in os.listdir(XLS_PATH) if (f.endswith('.xls'))];
 
-files = [f for f in os.listdir(os.getcwd() + '/xlsFiles/') if (f.endswith('.xls'))];
 for file in files:
-	fileName = file.split('.xls')[0];
-	dtArr, atArr = makeADT(fileName);
-	wtArr = makeWT(dtArr, atArr);
-	ttArr = makeTT(dtArr, atArr);
-	convertedName, dayType = utils.makeName(fileName);
+    fileName = file.split('.xls')[0];
+    dtArr, atArr = makeADT(fileName);
+    wtArr = makeWT(dtArr, atArr);
+    ttArr = makeTT(dtArr, atArr);
+    convertedName, dayType = utils.makeName(fileName);
 
-	path = CWD + '/' + dayType;
+    path = CWD + '/' + dayType;
 
-	utils.saveArrToDf(wtArr, path + WT + convertedName + '.csv');
-	utils.saveArrToDf(ttArr, path + TT + convertedName + '.csv');
-
-
-
+    utils.saveArrToDf(wtArr, path + WT + convertedName + '.csv');
+    utils.saveArrToDf(ttArr, path + TT + convertedName + '.csv');

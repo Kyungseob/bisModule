@@ -4,7 +4,6 @@ import math;
 import os;
 import utils;
 import nn;
-from datetime import datetime;
 
 CWD = os.getcwd();
 
@@ -15,6 +14,7 @@ def train(dayType):
     ttModel = base + 'TT/MODEL/';
     wtModel = base + 'WT/MODEL/';
     files = [f for f in os.listdir(tt) if (f.endswith('.csv'))];
+    files.sort();
     sizeParam = utils.getSizeParam(tt + files[0]);
     flatten = [];
     for file in files:
@@ -29,11 +29,9 @@ def train(dayType):
         cutIdx = int(math.floor(cutted.shape[0]/2));
         trainX = cutted[:cutIdx-1, :, :];
         trainY = cutted[1:cutIdx, :, :];
-
         trainY = np.reshape(trainY, (cutIdx-1, sizeParam[1]));
         testX = cutted[cutIdx:-1, :, :];
         testY = cutted[cutIdx+1:, :, :];
-
         testY = np.reshape(testY, (cutIdx-1, sizeParam[1]));
 	model = nn.init(sizeParam[1], trainX.shape);
 	model.fit(trainX, trainY, epochs=500, validation_data=(testX, testY), verbose=2);
