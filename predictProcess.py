@@ -48,16 +48,18 @@ def interpolate(pred, avgPath):
                 pred[i, j] = avg[i, j];
     return pred;
 
-def makeTable():
+def makeTimeTable():
+    
     return ;
-
 
 file='20180917_MON.csv';
 ttPred = predict(file, TT_MODEL, TT_INT);
-#wtPred = predict(file, WT_MODEL, WT_INT);
+wtPred = predict(file, WT_MODEL, WT_INT);
 
 ttIntPred = interpolate(ttPred, TT_AVG);
-#wtIntPred = ;
+wtIntPred = interpolate(wtPred, WT_AVG);;
 
 tt = pd.DataFrame(data=ttPred).to_csv(TT_RESULT + file, index=False);
-#wt = pd.DataFrame(data=wtPred, index=False).to_csv(WT_RESULT + file);
+wt = pd.DataFrame(data=wtPred).to_csv(WT_RESULT + file, index=False);
+
+

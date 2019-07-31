@@ -11,8 +11,8 @@ def train(dayType):
     base = CWD + '/' + dayType + '/';
     tt = base + 'TT/INT/';
     wt = base + 'WT/INT/';
-    ttModel = base + 'TT/MODEL/';
-    wtModel = base + 'WT/MODEL/';
+    ttModel = base + 'TT/MODELS/';
+    wtModel = base + 'WT/MODELS/';
     files = [f for f in os.listdir(tt) if (f.endswith('.csv'))];
     files.sort();
     sizeParam = utils.getSizeParam(tt + files[0]);
