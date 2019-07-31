@@ -48,6 +48,9 @@ def interpolate(pred, avgPath):
                 pred[i, j] = avg[i, j];
     return pred;
 
+def makeTable():
+    return ;
+
 
 file='20180917_MON.csv';
 ttPred = predict(file, TT_MODEL, TT_INT);
