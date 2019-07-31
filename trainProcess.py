@@ -25,15 +25,18 @@ def train(dayType):
     flatten = np.reshape(flatten, (flatten.shape[0], 1, flatten.shape[1]));
     for i in range(len(sizeParam) -1):
         cutted = flatten[:, :, sizeParam[i]:sizeParam[i+1]];
+	print(cutted.shape);
         cutIdx = int(math.floor(cutted.shape[0]/2));
         trainX = cutted[:cutIdx-1, :, :];
         trainY = cutted[1:cutIdx, :, :];
+
         trainY = np.reshape(trainY, (cutIdx-1, sizeParam[1]));
         testX = cutted[cutIdx:-1, :, :];
         testY = cutted[cutIdx+1:, :, :];
+
         testY = np.reshape(testY, (cutIdx-1, sizeParam[1]));
-    model = nn.init(sizeParam[1], trainX.shape);
-    model.fit(trainX, trainY, epochs=1500, validation_data=(testX, testY), verbose=2);
-    model.save_weights(datetime.now().strftime("%Y-%m-%d") + '_' + str(i+1) + '.h5');
+	model = nn.init(sizeParam[1], trainX.shape);
+	model.fit(trainX, trainY, epochs=500, validation_data=(testX, testY), verbose=2);
+    	model.save_weights(ttModel + datetime.now().strftime("%Y-%m-%d") + '_' + str(i+1) + '.h5');
 
 train('weekday');
