@@ -36,7 +36,7 @@ def train(dayType):
         model = nn.init(sizeParam[1], trainX.shape);
         model.fit(trainX, trainY, epochs=1000, validation_data=(testX, testY), verbose=2);
     	model.save_weights(os.path.join(ttModel, 'TT' + '_' + str(i+1) + '.h5'));
-
+    
     files = [f for f in os.listdir(wt) if (f.endswith('.csv'))];
     files.sort();
     sizeParam = utils.getSizeParam(os.path.join(wt, files[0]));
