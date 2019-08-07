@@ -9,7 +9,7 @@ CWD = os.path.dirname(os.path.abspath(__file__));
 def predict(file, mdPath, intPath):
     sizeParam = utils.getSizeParam(intPath + file);
     print(sizeParam);
-    df = pd.read_csv(intPath + file, index_col=False);
+    df = pd.read_csv(os.path.join(intPath, file), index_col=False);
     arr = df.as_matrix();
     print(arr.shape);
     all = [];
@@ -21,7 +21,7 @@ def predict(file, mdPath, intPath):
         part = np.reshape(part, (part.shape[0], 1, part.shape[1]));
         print(part.shape);
         model = nn.init(sizeParam[1], part.shape);
-        model.load_weights(mdPath + 'model' + '_' + str(i+1) + '.h5');
+        model.load_weights(os.path.join(mdPath, 'model' + '_' + str(i+1) + '.h5'));
         pResult = model.predict(part);
         pResult = np.array(pResult);
         pResult = pResult.flatten().T;
@@ -39,28 +39,37 @@ def interpolate(pred, avgPath):
                 pred[i, j] = avg[i, j];
     return pred;
 
-def inference(file):
-    dayType = 'weekday';
-    base = CWD + '/' + dayType;
-    TT_INT = base + '/TT/INT/';
-    WT_INT = base + '/WT/INT/';
-    TT_MODEL = base + '/TT/MODELS/';
-    WT_MODEL = base + '/WT/MODELS/';
-    TT_RESULT = base + '/TT/RESULT/';
-    WT_RESULT = base + '/WT/RESULT/';
-    TT_AVG = base + '/TT/AVG/TT_AVG.csv';
-    WT_AVG = base + '/WT/AVG/WT_AVG.csv';
-
-
-    file='20180917_MON.csv';
-
+def process(dayType):
+    base = os.path.join(CWD, dayType);
+    TT_INT = os.path.join(base, 'TT', 'INT');
+    WT_INT = os.path.join(base, 'WT', 'INT');
+    TT_MODEL = os.path.join(base, 'TT', 'MODELS');
+    WT_MODEL = os.path.join(base, 'WT', 'MODELS');
+    TT_RESULT = os.path.join(base, 'TT', 'RESULT');
+    WT_RESULT = os.path.join(base, 'WT', 'RESULT');
+    TT_AVG = os.path.join(base, 'TT', 'AVG', 'TT_AVG.csv');
+    WT_AVG = os.path.join(base, 'WT', 'AVG', 'WT_AVG.csv');
+    
+    files = [f for f in os.listdir(TT_INT) if(f.endswith('.csv'))];
+    files.sort(reverse=True);
+    
+    file = files[0];#recent file;
+    
     wtPred = predict(file, WT_MODEL, WT_INT);
     ttPred = predict(file, TT_MODEL, TT_INT);
-
+    
     ttIntPred = interpolate(ttPred, TT_AVG);
     wtIntPred = interpolate(wtPred, WT_AVG);
+    
+    tt = pd.DataFrame(data=ttPred).to_csv(os.path.join(TT_RESULT, file), index=False);
+    wt = pd.DataFrame(data=wtPred).to_csv(os.path.join(WT_RESULT, file), index=False);
 
-    tt = pd.DataFrame(data=ttPred).to_csv(TT_RESULT + file, index=False);
-    wt = pd.DataFrame(data=wtPred).to_csv(WT_RESULT + file, index=False);
+if(__name__ == '__main__'):
+    base = os.path.join(CWD, 'weekday');
+    TT_INT = os.path.join(base, 'TT', 'INT');
+    files = [f for f in os.listdir(TT_INT) if(f.endswith('.csv'))];
+    files.sort(reverse=True);
+    print(files[0]);
+
 
 
