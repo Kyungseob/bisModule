@@ -34,7 +34,7 @@ def train(dayType):
         testY = cutted[cutIdx+1:, :, :];
         testY = np.reshape(testY, (cutIdx-1, sizeParam[1]));
         model = nn.init(sizeParam[1], trainX.shape);
-        model.fit(trainX, trainY, epochs=500, validation_data=(testX, testY), verbose=2);
+        model.fit(trainX, trainY, epochs=1000, validation_data=(testX, testY), verbose=2);
     	model.save_weights(ttModel + '2019-07-30' + '_' + str(i+1) + '.h5');
     files = [f for f in os.listdir(wt) if (f.endswith('.csv'))];
     files.sort();
@@ -57,7 +57,7 @@ def train(dayType):
         testY = cutted[cutIdx+1:, :, :];
         testY = np.reshape(testY, (cutIdx-1, sizeParam[1]));
         model = nn.init(sizeParam[1], trainX.shape);
-        model.fit(trainX, trainY, epochs=500, validation_data=(testX, testY), verbose=2);
+        model.fit(trainX, trainY, epochs=1000, validation_data=(testX, testY), verbose=2);
         model.save_weights(wtModel + '2019-07-30' + '_' + str(i+1) + '.h5');
 
 train('weekday');
