@@ -4,3 +4,6 @@ xlsFiles/*
 *.pyc
 test/*
 getModel.sh
+WT*
+TT*
+*.xls

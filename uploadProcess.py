@@ -1,11 +1,12 @@
 import pandas as pd;
 import numpy as np;
 import os;
+import subprocess;
 import sys;
 import time;
 import utils;
 
-CWD = os.getcwd();
+CWD = os.path.abspath(__file__);
 
 XLS_PATH = CWD + '/' + 'xlsFiles';
 WT = '/WT/FILES/'
@@ -99,16 +100,20 @@ def makeTT(departure, arrival):
 
     return result;
 
-files = [f for f in os.listdir(XLS_PATH) if (f.endswith('.xls'))];
+def upload(xlsFile):
+    files = [f for f in os.listdir(XLS_PATH) if (f.endswith('.xls'))];
 
-for file in files:
-    fileName = file.split('.xls')[0];
-    dtArr, atArr = makeADT(fileName);
-    wtArr = makeWT(dtArr, atArr);
-    ttArr = makeTT(dtArr, atArr);
-    convertedName, dayType = utils.makeName(fileName);
+    for file in files:
+        fileName = file.split('.xls')[0];
+        dtArr, atArr = makeADT(fileName);
+        wtArr = makeWT(dtArr, atArr);
+        ttArr = makeTT(dtArr, atArr);
+        convertedName, dayType = utils.makeName(fileName);
 
-    path = CWD + '/' + dayType;
+        path = CWD + '/' + dayType;
 
-    utils.saveArrToDf(wtArr, path + WT + convertedName + '.csv');
-    utils.saveArrToDf(ttArr, path + TT + convertedName + '.csv');
+        utils.saveArrToDf(wtArr, path + WT + convertedName + '.csv');
+        utils.saveArrToDf(ttArr, path + TT + convertedName + '.csv');
+
+def test():
+    print(CWD);

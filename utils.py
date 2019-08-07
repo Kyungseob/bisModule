@@ -17,6 +17,14 @@ def idxToTime(idx):
     if( len(nHour) == 1 ): nHour = '0' + nHour;
     return hour + ':' + minute + '~' + nHour + ':' + nMinute;
 
+def judgeDaytype(dateStr):
+    splittedDates = dateStr.split('-');
+    dayType = 'weekday';
+    idx = date(int(splittedDates[0]), int(splittedDates[1]), int(splittedDates[2])).weekday();
+    if(idx > 4):
+        dayType = 'weekend';
+    return dayType;
+
 def makeName(fileName):
     fileName = fileName.split('_')[1];
     splittedDates = fileName.split('-');
