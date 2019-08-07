@@ -5,7 +5,7 @@ import os;
 import utils;
 import nn;
 
-CWD = os.getcwd();
+CWD = os.path.dirname(os.path.abspath(__file__));
 
 def train(dayType):
     base = os.path.join(CWD, dayType);
@@ -35,8 +35,8 @@ def train(dayType):
         testY = np.reshape(testY, (cutIdx-1, sizeParam[1]));
         model = nn.init(sizeParam[1], trainX.shape);
         model.fit(trainX, trainY, epochs=1000, validation_data=(testX, testY), verbose=2);
-    	model.save_weights(os.path.join(ttModel, 'TT' + '_' + str(i+1) + '.h5'));
-    
+    	model.save_weights(os.path.join(ttModel, 'model' + '_' + str(i+1) + '.h5'));
+
     files = [f for f in os.listdir(wt) if (f.endswith('.csv'))];
     files.sort();
     sizeParam = utils.getSizeParam(os.path.join(wt, files[0]));
@@ -58,7 +58,7 @@ def train(dayType):
         testY = np.reshape(testY, (cutIdx-1, sizeParam[1]));
         model = nn.init(sizeParam[1], trainX.shape);
         model.fit(trainX, trainY, epochs=1000, validation_data=(testX, testY), verbose=2);
-        model.save_weights(os.path.join(wtModel, 'WT' + '_' + str(i+1) + '.h5'));
+        model.save_weights(os.path.join(wtModel, 'model' + '_' + str(i+1) + '.h5'));
 
 train('weekday');
 train('weekend');

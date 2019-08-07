@@ -18,7 +18,7 @@ def toTimeslot(date):
     minute = int(splitted[1]);
     return hour*4 + int(math.floor(minute/TIMESLOT_SIZE));
 
-CWD = os.getcwd()
+CWD = os.path.dirname(os.path.abspath(__file__));
 
 weekdayCardPath = os.path.join(CWD, 'weekday', 'CARD_DATA');
 weekendCardPath = os.path.join(CWD, 'weekend', 'CARD_DATA');

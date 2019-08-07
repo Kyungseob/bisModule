@@ -6,11 +6,11 @@ import sys;
 import time;
 import utils;
 
-CWD = os.path.abspath(__file__);
+CWD = os.path.dirname(os.path.abspath(__file__));
 
-XLS_PATH = CWD + '/' + 'xlsFiles';
-WT = '/WT/FILES/'
-TT = '/TT/FILES/'
+XLS_PATH = os.path.join(CWD, 'xlsFiles');
+WT = os.path.join('WT', 'FILES');
+TT = os.path.join('TT', 'FILES');
 
 days = ['MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT', 'SUN'];
 TIMESLOT_SIZE = 15; #15 minutes;
@@ -18,7 +18,7 @@ TIMESLOT_DIMENSION = int(24*(60/TIMESLOT_SIZE)) #hour * timeslot count per hour
 
 #filePath or fileObject;
 def makeADT(fileName):
-    df = pd.read_excel(XLS_PATH + '/' + fileName + '.xls', index_col=False);
+    df = pd.read_excel(os.path.join(XLS_PATH, fileName + '.xls'), index_col=False);
     df = df.as_matrix()[:, 2:];
     df = pd.DataFrame(data=df);
 
@@ -100,20 +100,31 @@ def makeTT(departure, arrival):
 
     return result;
 
-def upload(xlsFile):
-    files = [f for f in os.listdir(XLS_PATH) if (f.endswith('.xls'))];
+def upload(xlsFilePath):
+    fileName = os.path.basename(xlsFilePath);
+    subprocess.call(['mv', xlsFilePath, os.path.join(XLS_PATH, fileName)])
+    fileName = fileName.split('.xls')[0];
+    dtArr, atArr = makeADT(fileName);
+    wtArr = makeWT(dtArr, atArr);
+    ttArr = makeTT(dtArr, atArr);
+    convertedName, dayType = utils.makeName(fileName);
+    
+    path = os.path.join(CWD, dayType);
+        
+    utils.saveArrToDf(wtArr, os.path.join(path, WT, convertedName + '.csv'));
+    utils.saveArrToDf(ttArr, os.path.join(path, TT, convertedName + '.csv'));
 
+if __name__ == "__main__":
+    files = [f for f in os.listdir(XLS_PATH) if (f.endswith('.xls'))];
+    
     for file in files:
         fileName = file.split('.xls')[0];
         dtArr, atArr = makeADT(fileName);
         wtArr = makeWT(dtArr, atArr);
         ttArr = makeTT(dtArr, atArr);
         convertedName, dayType = utils.makeName(fileName);
-
-        path = CWD + '/' + dayType;
-
-        utils.saveArrToDf(wtArr, path + WT + convertedName + '.csv');
-        utils.saveArrToDf(ttArr, path + TT + convertedName + '.csv');
-
-def test():
-    print(CWD);
+        
+        path = os.path.join(CWD, dayType);
+        
+        utils.saveArrToDf(wtArr, os.path.join(path, WT, convertedName + '.csv'));
+        utils.saveArrToDf(ttArr, os.path.join(path, TT, convertedName + '.csv'));

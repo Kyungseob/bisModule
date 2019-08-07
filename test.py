@@ -1,18 +1,10 @@
-import numpy as np;
+import os;
 
-result = [];
+abs = os.path.dirname(os.path.abspath(__file__));
+test1 = os.path.join('test', 'test2');
+test2 = os.path.join('test', 'test1');
 
-a = np.array([1,2,3]);
-b = np.array([4,5,6]);
-c = np.array([7,8,9]);
-
-result.append(a);
-result.append(b);
-result.append(c);
-
-result = np.array(result)
-result = result.flatten().T;
-
+result = os.path.join(abs, test1, test2);
 print(result);
 
 

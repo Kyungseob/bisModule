@@ -4,18 +4,7 @@ import os;
 import utils;
 import nn;
 
-CWD = os.getcwd();
-
-dayType = 'weekday';
-base = CWD + '/' + dayType;
-TT_INT = base + '/TT/INT/';
-WT_INT = base + '/WT/INT/';
-TT_MODEL = base + '/TT/MODELS/';
-WT_MODEL = base + '/WT/MODELS/';
-TT_RESULT = base + '/TT/RESULT/';
-WT_RESULT = base + '/WT/RESULT/';
-TT_AVG = base + '/TT/AVG/TT_AVG.csv';
-WT_AVG = base + '/WT/AVG/WT_AVG.csv';
+CWD = os.path.dirname(os.path.abspath(__file__));
 
 def predict(file, mdPath, intPath):
     sizeParam = utils.getSizeParam(intPath + file);
@@ -32,7 +21,7 @@ def predict(file, mdPath, intPath):
         part = np.reshape(part, (part.shape[0], 1, part.shape[1]));
         print(part.shape);
         model = nn.init(sizeParam[1], part.shape);
-        model.load_weights(mdPath + '2019-07-30' + '_' + str(i+1) + '.h5');
+        model.load_weights(mdPath + 'model' + '_' + str(i+1) + '.h5');
         pResult = model.predict(part);
         pResult = np.array(pResult);
         pResult = pResult.flatten().T;
@@ -50,15 +39,28 @@ def interpolate(pred, avgPath):
                 pred[i, j] = avg[i, j];
     return pred;
 
-file='20180917_MON.csv';
+def inference(file):
+    dayType = 'weekday';
+    base = CWD + '/' + dayType;
+    TT_INT = base + '/TT/INT/';
+    WT_INT = base + '/WT/INT/';
+    TT_MODEL = base + '/TT/MODELS/';
+    WT_MODEL = base + '/WT/MODELS/';
+    TT_RESULT = base + '/TT/RESULT/';
+    WT_RESULT = base + '/WT/RESULT/';
+    TT_AVG = base + '/TT/AVG/TT_AVG.csv';
+    WT_AVG = base + '/WT/AVG/WT_AVG.csv';
 
-wtPred = predict(file, WT_MODEL, WT_INT);
-ttPred = predict(file, TT_MODEL, TT_INT);
 
-ttIntPred = interpolate(ttPred, TT_AVG);
-wtIntPred = interpolate(wtPred, WT_AVG);
+    file='20180917_MON.csv';
 
-tt = pd.DataFrame(data=ttPred).to_csv(TT_RESULT + file, index=False);
-wt = pd.DataFrame(data=wtPred).to_csv(WT_RESULT + file, index=False);
+    wtPred = predict(file, WT_MODEL, WT_INT);
+    ttPred = predict(file, TT_MODEL, TT_INT);
+
+    ttIntPred = interpolate(ttPred, TT_AVG);
+    wtIntPred = interpolate(wtPred, WT_AVG);
+
+    tt = pd.DataFrame(data=ttPred).to_csv(TT_RESULT + file, index=False);
+    wt = pd.DataFrame(data=wtPred).to_csv(WT_RESULT + file, index=False);
 
 
