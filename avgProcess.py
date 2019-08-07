@@ -27,7 +27,7 @@ def makeAvgTT(dayType):
     
     for file in files:
         fileName = file.split('_TT')[0];
-        df = pd.read_csv(ttPath + file, index_col=False);
+        df = pd.read_csv(os.path.join(ttPath, file), index_col=False);
         arr = df.as_matrix();
         for i, list in enumerate(arr):
             for j, elem in enumerate(list):
