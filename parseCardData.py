@@ -75,7 +75,7 @@ def makeDev(path, dayType):
 
     dev = [];
     for elem in avgArr:
-        dev.append(WEIGHT*(elem - avg)/stdev);
+        dev.append(-WEIGHT*(elem - avg)/stdev);
 
     dev = np.array(dev);
     dev = np.reshape(dev, (len(dev), 1));
