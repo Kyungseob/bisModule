@@ -3,11 +3,12 @@ import numpy as np;
 import os;
 import utils;
 import nn;
+import utils;
 
 CWD = os.path.dirname(os.path.abspath(__file__));
 
 def predict(file, mdPath, intPath):
-    sizeParam = utils.getSizeParam(intPath + file);
+    sizeParam = utils.getSizeParam(os.path.join(intPath, file));
     print(sizeParam);
     df = pd.read_csv(os.path.join(intPath, file), index_col=False);
     arr = df.as_matrix();
@@ -55,21 +56,24 @@ def process(dayType):
     
     file = files[0];#recent file;
     
+    resultName = utils.getNextDate(file.split('_')[0]) + '.csv';
+    
     wtPred = predict(file, WT_MODEL, WT_INT);
     ttPred = predict(file, TT_MODEL, TT_INT);
     
     ttIntPred = interpolate(ttPred, TT_AVG);
     wtIntPred = interpolate(wtPred, WT_AVG);
     
-    tt = pd.DataFrame(data=ttPred).to_csv(os.path.join(TT_RESULT, file), index=False);
-    wt = pd.DataFrame(data=wtPred).to_csv(os.path.join(WT_RESULT, file), index=False);
+    resultName = utils.getNextDate(file.split('_')[0]) + '.csv';
+    
+    tt = pd.DataFrame(data=ttPred).to_csv(os.path.join(TT_RESULT, resultName), index=False);
+    wt = pd.DataFrame(data=wtPred).to_csv(os.path.join(WT_RESULT, resultName), index=False);
 
 if(__name__ == '__main__'):
     base = os.path.join(CWD, 'weekday');
     TT_INT = os.path.join(base, 'TT', 'INT');
     files = [f for f in os.listdir(TT_INT) if(f.endswith('.csv'))];
     files.sort(reverse=True);
-    print(files[0]);
-
-
-
+    targetFile = files[0];
+    dayType = utils.getDayType(targetFile);
+    process(dayType);

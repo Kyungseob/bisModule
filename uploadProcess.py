@@ -100,7 +100,7 @@ def makeTT(departure, arrival):
 
     return result;
 
-def upload(xlsFilePath):
+def process(xlsFilePath):
     fileName = os.path.basename(xlsFilePath);
     subprocess.call(['mv', xlsFilePath, os.path.join(XLS_PATH, fileName)])
     fileName = fileName.split('.xls')[0];

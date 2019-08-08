@@ -1,10 +1,11 @@
-import os;
+days = ['MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT', 'SUN'];
 
-abs = os.path.dirname(os.path.abspath(__file__));
-test1 = os.path.join('test', 'test2');
-test2 = os.path.join('test', 'test1');
+def getDayType(fileName):
+    day = fileName.split('_')[1].split('.')[0];
+    index = days.index(day);
+    if(index < 5):
+        return 'weekday'
+    return 'weekend';
 
-result = os.path.join(abs, test1, test2);
-print(result);
-
+print(getDayType('123123123_FRI.csv'));
 

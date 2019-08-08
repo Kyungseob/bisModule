@@ -1,5 +1,5 @@
 import pandas as pd;
-from datetime import datetime, date;
+from datetime import datetime, date, timedelta;
 import time;
 import math;
 
@@ -110,3 +110,22 @@ def secToString(sec):
     if (hour > 23):
         hour = hour - 24;
     return concatZero(hour) + ':' + concatZero(minute) + ':' + concatZero(sec);
+
+def getNextDate(dateStr):
+    y1, y2, y3, y4, m1, m2, d1, d2 = dateStr;
+    year = y1 + y2 + y3 + y4;
+    month = m1 + m2;
+    day = d1 + d2;
+    dateStr = year + '-' + month + '-' + day;
+    date = datetime.strptime(dateStr, "%Y-%m-%d");
+    dayIdx = date.weekday();
+    dict = {0: 1, 1:1, 2:1, 3:1, 4:3, 5:1, 6:6}
+    nextDate = date + timedelta(days=dict[dayIdx])
+    return nextDate.strftime("%Y%m%d") + '_' + days[nextDate.weekday()];
+
+def getDayType(fileName):
+    day = fileName.split('_')[1].split('.')[0];
+    index = days.index(day);
+    if(index < 5):
+        return 'weekday'
+    return 'weekend';
