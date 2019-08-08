@@ -8,7 +8,7 @@ CWD = os.path.dirname(os.path.abspath(__file__));
 TIMESLOT = 96; # 15miniture for each slot;
 
 def init(first, last, tripCount, busCount, stopCount, dayType):
-    global FIRST_TRIP, LAST_TRIP, TRIP_COUNT, MAX_BUS_COUNT, STOP_COUNT, DEFAULT_PERIOD, ADDED_WEIGHT, TEST_WEIGHT, TABLE_DIR, PERIOD_MAP, TIME_MAP, START_MAP, TT_PREDICTION_MAP, WT_PREDICTION_MAP;
+    global FIRST_TRIP, LAST_TRIP, TRIP_COUNT, MAX_BUS_COUNT, STOP_COUNT, DEFAULT_PERIOD, ADDED_WEIGHT, TEST_WEIGHT, WEIGHT_MAP, TABLE_DIR, PERIOD_MAP, TIME_MAP, START_MAP, TT_PREDICTION_MAP, WT_PREDICTION_MAP;
     base = os.path.join(CWD, dayType);
     WT_RESULT = os.path.join(base, 'WT', 'RESULT');
     TT_RESULT = os.path.join(base, 'TT', 'RESULT');
