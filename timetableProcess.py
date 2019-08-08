@@ -41,7 +41,7 @@ def getPeriod(tripIdx):
     return PERIOD_MAP[tripIdx];
 
 def getWeight(sec):
-    return WEIGHT_MAP[secToIdx(sec)];
+    return WEIGHT_MAP[utils.secToIdx(sec)];
 
 def calcPeriod(startTime):
     global PERIOD_MAP;
@@ -76,7 +76,7 @@ def changePeriod(tripIdx, val):
         PERIOD_MAP[tripIdx+i] += calibrate;
 
 def predictionValue(map, sec, idx):
-    secIdx = secToIdx(sec);
+    secIdx = utils.secToIdx(sec);
     val = map[secIdx, idx];
     if (val == 0):
         upperIdx = secIdx - 1;
@@ -138,7 +138,7 @@ def concatZero(val):
     return str(val);
 
 def parseTimemap():
-    wrapper = np.vectorize(secToString);
+    wrapper = np.vectorize(utils.secToString);
     return wrapper(TIME_MAP);
 
 def validationMax(time, idx):
@@ -200,8 +200,8 @@ def process():
     DIFF = np.array(DIFF, dtype=object);
 
     for i in range(TIME_MAP.shape[0]-1):
-        DIFF[i, 0] = secToString(TIME_MAP[i, 0]);
-        DIFF[i, 1] = secToString(TIME_MAP[i+1, 0]);
+        DIFF[i, 0] = utils.secToString(TIME_MAP[i, 0]);
+        DIFF[i, 1] = utils.secToString(TIME_MAP[i+1, 0]);
         DIFF[i, 2] = round((TIME_MAP[i+1, 0] - TIME_MAP[i, 0])/60, 0);
         for j in range(STOP_COUNT):
             TIME_DIFF[i, j] = int(round(TIME_MAP[i+1, j] - TIME_MAP[i, j], 0) - (DEFAULT_PERIOD + getPeriod(i)));
