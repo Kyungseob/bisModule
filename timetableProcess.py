@@ -8,7 +8,7 @@ CWD = os.path.dirname(os.path.abspath(__file__));
 TIMESLOT = 96; # 15miniture for each slot;
 
 def init(first, last, tripCount, busCount, stopCount, dayType):
-    global FIRST_TRIP, LAST_TRIP, TRIP_COUNT, MAX_BUS_COUNT, STOP_COUNT, DEFAULT_PERIOD, ADDED_WEIGHT, TEST_WEIGHT, WEIGHT_MAP, TABLE_DIR, PERIOD_MAP, TIME_MAP, START_MAP, TT_PREDICTION_MAP, WT_PREDICTION_MAP;
+    global FIRST_TRIP, LAST_TRIP, TRIP_COUNT, MAX_BUS_COUNT, STOP_COUNT, DEFAULT_PERIOD, ADDED_WEIGHT, TEST_WEIGHT, WEIGHT_MAP, TABLE_DIR, PERIOD_MAP, TIME_MAP, START_MAP, TT_PREDICTION_MAP, WT_PREDICTION_MAP, file;
     base = os.path.join(CWD, dayType);
     WT_RESULT = os.path.join(base, 'WT', 'RESULT');
     TT_RESULT = os.path.join(base, 'TT', 'RESULT');
@@ -223,8 +223,9 @@ def process():
     pd.DataFrame(data=TIME_DIFF).to_csv(os.path.join(TABLE_DIR, fileName + '_timeDiff.csv'), index=False);
     pd.DataFrame(data=parsedMap).to_csv(os.path.join(TABLE_DIR, fileName + '_table.csv'), index=False);
 
-init(4*60*60 + 10*60, 22*60*60 + 30*60, 124, 27, 99, 'weekday');
-process();
+if(__name__ == '__main__'):
+    init(4*60*60 + 10*60, 23*60*60 + 10*60, 150, 27, 86, 'weekday');
+    process();
 
 #import pandas as pd;
 #import numpy as np;
