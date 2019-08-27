@@ -114,6 +114,8 @@ def process(xlsFilePath):
     utils.saveArrToDf(wtArr, os.path.join(path, WT, convertedName + '.csv'));
     utils.saveArrToDf(ttArr, os.path.join(path, TT, convertedName + '.csv'));
 
+    return dayType;
+
 if __name__ == "__main__":
     files = [f for f in os.listdir(XLS_PATH) if (f.endswith('test_2019-07-31_5413.xls'))];
     
