@@ -52,7 +52,7 @@ def makeWT(departure, arrival):
     for i, list in enumerate(atArr):
         for j, elem in enumerate(list):
             if(not pd.isnull(atArr[i, j])):
-                if(not pd.isnull(dtArr[i, j])):
+                if(not pd.isnull(dpArr[i, j])):
                     index = utils.judgeTimeslot(atArr[i, j]);
                     wt = dpArr[i, j] - atArr[i, j];
                     if(wt < 0):
@@ -80,10 +80,10 @@ def makeTT(departure, arrival):
     for i, list in enumerate(atArr):
         for j, elem in enumerate(list):
             if(not pd.isnull(atArr[i, j])):
-                if(not pd.isnull(dtArr[i, j])):
+                if(not pd.isnull(dpArr[i, j])):
                     index = utils.judgeTimeslot(atArr[i, j]);
                     arriveTime = atArr[i, j];
-                    departureTime = dtArr[i, j];
+                    departureTime = dArr[i, j];
                     tripTime = arriveTime - departureTime;
                     if(tripTime < 0 ):
                         arriveTime = arriveTime + 24*60*60;
