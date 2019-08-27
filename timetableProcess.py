@@ -108,7 +108,7 @@ def createTrip(startTime, tripIdx, flag):
         return ;
     temp = np.zeros((1, STOP_COUNT+1));
     TIME_MAP = np.concatenate((TIME_MAP, temp), axis=0)
-    if(tripIdx == 123 or flag):
+    if(flag):
         TIME_MAP[tripIdx,0] = startTime;
         for i in range(1, STOP_COUNT):
             temp = [];
@@ -127,7 +127,7 @@ def createTrip(startTime, tripIdx, flag):
         costSeries.append(cost);
     idx = costSeries.index(min(costSeries));
     global TEST_WEIGHT;
-    TEST_WEIGHT += (idx-180);
+    TEST_WEIGHT += ((idx-6)*30);
     for i, elem in enumerate(timeSeries[idx]):
         TIME_MAP[tripIdx, i] = elem;
     TIME_MAP[tripIdx, STOP_COUNT] = TIME_MAP[tripIdx, STOP_COUNT-1] + 15.0 * 60.0;
@@ -194,6 +194,10 @@ def process():
         createTrip(START_MAP[i], i, flag);
 
     START_MAP[TRIP_COUNT-1] = TIME_MAP[TRIP_COUNT-2, 0] + DEFAULT_PERIOD + getPeriod(TRIP_COUNT-2) - TEST_WEIGHT;
+    print(TIME_MAP[TRIP_COUNT-3, 0]);
+    print(TIME_MAP[TRIP_COUNT-2, 0], DEFAULT_PERIOD, getPeriod(TRIP_COUNT-2), TEST_WEIGHT);
+    print(START_MAP[TRIP_COUNT-1])
+    print(START_MAP[TRIP_COUNT-2])
     createTrip(START_MAP[TRIP_COUNT-1], TRIP_COUNT-1, True);
 
     TIME_DIFF = np.zeros((TIME_MAP.shape[0]-1, STOP_COUNT))
@@ -217,6 +221,7 @@ def process():
     avg = avg / (TIME_MAP.shape[0]-1);
 
     parsedMap = parseTimemap();
+    print(parsedMap);
 
     fileName = file.split('.csv')[0];
 
