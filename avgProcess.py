@@ -2,6 +2,7 @@ import os;
 import numpy as np;
 import pandas as pd;
 import utils;
+import time;
 
 CWD = os.path.dirname(os.path.abspath(__file__));
 
@@ -19,14 +20,14 @@ def makeAvgTT(dayType):
     ttPath = os.path.join(CWD, dayType, TT);
     avgPath = os.path.join(CWD, dayType, TT_AVG);
     files = [f for f in os.listdir(ttPath) if (f.endswith('.csv'))];
-    
+    files.sort(reverse=True);
+    date = files[0].split('_')[0];
     df = pd.read_csv(os.path.join(ttPath, files[0]), index_col=False);
     
     result = np.zeros((TIMESLOT_DIMENSION, df.shape[1]));
     count = np.zeros((TIMESLOT_DIMENSION, df.shape[1]));
     
     for file in files:
-        fileName = file.split('_TT')[0];
         df = pd.read_csv(os.path.join(ttPath, file), index_col=False);
         arr = df.as_matrix();
         for i, list in enumerate(arr):
@@ -37,6 +38,8 @@ def makeAvgTT(dayType):
                     if(j == 0 and elem > 300):
                         result[i, j] -= elem;
                         count[i, j] -= 1;
+    pd.DataFrame(data=count).to_csv(os.path.join(avgPath, date + '_COUNT.csv'), index=False);
+    pd.DataFrame(data=result).to_csv(os.path.join(avgPath, date + '_SUM.csv'), index=False);
     for i, list in enumerate(result):
         for j, elem in enumerate(list):
             if( count[i, j] != 0 ):
@@ -44,20 +47,21 @@ def makeAvgTT(dayType):
 
     timeSlotCol = [utils.idxToTime(i) for i in range(TIMESLOT_DIMENSION)];
     resultdf = pd.DataFrame(data=result);
-    resultdf.to_csv(os.path.join(avgPath, 'TT_AVG.csv'), index=False);
+    
+    resultdf.to_csv(os.path.join(avgPath, date + '_AVG.csv'), index=False);
 
 def makeAvgWT(dayType):
     wtPath = os.path.join(CWD, dayType, WT);
     avgPath = os.path.join(CWD, dayType, WT_AVG);
     files = [f for f in os.listdir(wtPath) if (f.endswith('.csv'))];
-    
+    files.sort(reverse=True);
+    date = files[0].split('_')[0];
     df = pd.read_csv(os.path.join(wtPath, files[0]), index_col=False);
     
     result = np.zeros((TIMESLOT_DIMENSION, df.shape[1]));
     count = np.zeros((TIMESLOT_DIMENSION, df.shape[1]));
     
     for file in files:
-        fileName = file.split('_TT')[0];
         df = pd.read_csv(os.path.join(wtPath, file), index_col=False);
         arr = df.as_matrix();
         for i, list in enumerate(arr):
@@ -68,6 +72,8 @@ def makeAvgWT(dayType):
                     if(j == 0 and elem > 300):
                         result[i, j] -= elem;
                         count[i, j] -= 1;
+    pd.DataFrame(data=count).to_csv(os.path.join(avgPath, date + '_COUNT.csv'), index=False);
+    pd.DataFrame(data=result).to_csv(os.path.join(avgPath, date + '_SUM.csv'), index=False);
     for i, list in enumerate(result):
         for j, elem in enumerate(list):
             if( count[i, j] != 0 ):
@@ -75,22 +81,24 @@ def makeAvgWT(dayType):
 
     timeSlotCol = [utils.idxToTime(i) for i in range(TIMESLOT_DIMENSION)];
     resultdf = pd.DataFrame(data=result);
-    resultdf.to_csv(os.path.join(avgPath, 'WT_AVG.csv'), index=False);
+    resultdf.to_csv(os.path.join(avgPath, date + '_AVG.csv'), index=False);
 
 def makeINT(dayType):
     base = os.path.join(CWD, dayType);
     ttPath = os.path.join(base, TT);
-    ttAvgPath = os.path.join(base, TT_AVG, 'TT_AVG.csv');
+    ttAvgPath = os.path.join(base, TT_AVG);
     ttIntPath = os.path.join(base, TT_INT);
     wtPath = os.path.join(base, WT);
-    wtAvgPath = os.path.join(base, WT_AVG, 'WT_AVG.csv');
+    wtAvgPath = os.path.join(base, WT_AVG);
     wtIntPath = os.path.join(base, WT_INT);
     interpolate(ttPath, ttAvgPath, ttIntPath);
     interpolate(wtPath, wtAvgPath, wtIntPath);
 
 def interpolate(path, avgPath, intPath):
     files = [f for f in os.listdir(path) if (f.endswith('.csv'))];
-    avgTT = pd.read_csv(avgPath, index_col=False);
+    files.sort(reverse=True);
+    date = files[0].split('_')[0];
+    avgTT = pd.read_csv(os.path.join(avgPath, date + '_AVG.csv'), index_col=False);
     avgArr = avgTT.as_matrix();
     firstAvg = utils.calcAvgFirst(avgArr);
     for file in files:
@@ -112,6 +120,7 @@ def process(dayType):
     makeINT(dayType);
 
 if(__name__ == '__main__'):
+    start = time.time();
     makeAvgTT('weekday');
     makeAvgTT('weekend');
     makeAvgWT('weekday');

@@ -83,8 +83,8 @@ def getSizeParam(file):
     df = pd.read_csv(file, index_col=False);
     dArray = df.as_matrix();
     total = dArray.shape[0] * dArray.shape[1];
-    part = total / 6;
-    sizeParam = range(0, total, part);
+    part = int(total / 3);
+    sizeParam = list(range(0, total, part));
     sizeParam.append(total);
     return sizeParam;
 

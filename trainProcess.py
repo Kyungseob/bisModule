@@ -4,6 +4,9 @@ import math;
 import os;
 import utils;
 import nn;
+import tensorflow as tf;
+#from numba import cuda;
+#from keras import backend as K
 
 CWD = os.path.dirname(os.path.abspath(__file__));
 
@@ -33,9 +36,18 @@ def train(dayType):
         testX = cutted[cutIdx:-1, :, :];
         testY = cutted[cutIdx+1:, :, :];
         testY = np.reshape(testY, (cutIdx-1, sizeParam[1]));
-        model = nn.init(sizeParam[1], trainX.shape);
-        model.fit(trainX, trainY, epochs=1000, validation_data=(testX, testY), verbose=2);
-    	model.save_weights(os.path.join(ttModel, 'model' + '_' + str(i+1) + '.h5'));
+        graph = tf.Graph();
+        with graph.as_default():
+            session = tf.Session();
+            with session.as_default():
+                model = nn.init(sizeParam[1], trainX.shape);
+                model.fit(trainX, trainY, epochs=1000, validation_data=(testX, testY), verbose=2);
+                model.save_weights(os.path.join(ttModel, 'model' + '_' + str(i+1) + '.h5'))
+        #K.clear_session();
+        #cuda.select_device(0);
+        #cuda.close();
+        #cuda.select_device(1);
+        #cuda.close();
 
     files = [f for f in os.listdir(wt) if (f.endswith('.csv'))];
     files.sort();

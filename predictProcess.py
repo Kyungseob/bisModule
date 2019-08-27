@@ -4,10 +4,44 @@ import os;
 import utils;
 import nn;
 import utils;
+import time;
+import tensorflow as tf;
 
 CWD = os.path.dirname(os.path.abspath(__file__));
 
-def predict(file, mdPath, intPath):
+modelDict = dict();
+
+def initParam(dayType, dirType):
+    base = os.path.join(CWD, dayType);
+    intPath = os.path.join(base, dirType, 'INT');
+    files = [f for f in os.listdir(intPath) if(f.endswith('.csv'))];
+    sizeParam = utils.getSizeParam(os.path.join(intPath, files[0]));
+    return sizeParam[1], (1,1, sizeParam[1]);
+
+def loadModels():
+    dayTypes = ['weekday'];
+    dirs = ['TT', 'WT'];
+    for dayType in dayTypes:
+        modelConfigs = dict();
+        for dir in dirs:
+            configs = [];
+            for i in range(3):
+                graph = tf.Graph();
+                with graph.as_default():
+                    session = tf.Session();
+                    with session.as_default():
+                        size, shape = initParam(dayType, dir);
+                        model = nn.init(size, shape);
+                        model.load_weights(os.path.join(CWD, dayType, dir, 'MODELS', 'model' + '_' + str(i+1) + '.h5'));
+                        configs.append((graph, session, model));
+            modelConfigs[dir] = configs;
+        modelDict[dayType] = modelConfigs;
+
+loadModels();
+
+print(modelDict['weekday']['TT']);
+
+def predict(file, dayType, dirType, intPath):
     sizeParam = utils.getSizeParam(os.path.join(intPath, file));
     print(sizeParam);
     df = pd.read_csv(os.path.join(intPath, file), index_col=False);
@@ -21,12 +55,13 @@ def predict(file, mdPath, intPath):
         part = all[:, sizeParam[i]:sizeParam[i+1]];
         part = np.reshape(part, (part.shape[0], 1, part.shape[1]));
         print(part.shape);
-        model = nn.init(sizeParam[1], part.shape);
-        model.load_weights(os.path.join(mdPath, 'model' + '_' + str(i+1) + '.h5'));
-        pResult = model.predict(part);
-        pResult = np.array(pResult);
-        pResult = pResult.flatten().T;
-        result.append(pResult);
+        graph, session, model = modelDict[dayType][dirType][i];
+        with graph.as_default():
+            with session.as_default():
+                model.predict(part);
+        	pResult = np.array(pResult);
+        	pResult = pResult.flatten().T;
+        	result.append(pResult);
     result = np.array(result);
     result = np.reshape(result, (arr.shape[0], arr.shape[1]));
     return result;
@@ -48,18 +83,20 @@ def process(dayType):
     WT_MODEL = os.path.join(base, 'WT', 'MODELS');
     TT_RESULT = os.path.join(base, 'TT', 'RESULT');
     WT_RESULT = os.path.join(base, 'WT', 'RESULT');
-    TT_AVG = os.path.join(base, 'TT', 'AVG', 'TT_AVG.csv');
-    WT_AVG = os.path.join(base, 'WT', 'AVG', 'WT_AVG.csv');
     
     files = [f for f in os.listdir(TT_INT) if(f.endswith('.csv'))];
     files.sort(reverse=True);
     
     file = files[0];#recent file;
+    baseName = file.split('_')[0];
+
+    TT_AVG = os.path.join(base, 'TT', 'AVG', baseName + '_AVG.csv');
+    WT_AVG = os.path.join(base, 'WT', 'AVG', baseName + '_AVG.csv');
     
-    resultName = utils.getNextDate(file.split('_')[0]) + '.csv';
+    resultName = utils.getNextDate(baseName) + '.csv';
     
-    wtPred = predict(file, WT_MODEL, WT_INT);
-    ttPred = predict(file, TT_MODEL, TT_INT);
+    ttPred = predict(file, dayType, 'TT', TT_INT);
+    wtPred = predict(file, dayType, 'WT', WT_INT);
     
     ttIntPred = interpolate(ttPred, TT_AVG);
     wtIntPred = interpolate(wtPred, WT_AVG);
@@ -76,4 +113,6 @@ if(__name__ == '__main__'):
     files.sort(reverse=True);
     targetFile = files[0];
     dayType = utils.getDayType(targetFile);
+    start = time.time()
     process(dayType);
+    print("predict process : " + str(time.time() - start) + 's');

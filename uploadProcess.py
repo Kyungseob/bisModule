@@ -115,8 +115,9 @@ def process(xlsFilePath):
     utils.saveArrToDf(ttArr, os.path.join(path, TT, convertedName + '.csv'));
 
 if __name__ == "__main__":
-    files = [f for f in os.listdir(XLS_PATH) if (f.endswith('.xls'))];
+    files = [f for f in os.listdir(XLS_PATH) if (f.endswith('test_2019-07-31_5413.xls'))];
     
+    start = time.time();
     for file in files:
         fileName = file.split('.xls')[0];
         dtArr, atArr = makeADT(fileName);
@@ -128,3 +129,4 @@ if __name__ == "__main__":
         
         utils.saveArrToDf(wtArr, os.path.join(path, WT, convertedName + '.csv'));
         utils.saveArrToDf(ttArr, os.path.join(path, TT, convertedName + '.csv'));
+    print("upload process : " + str(time.time()-start) + 's');
