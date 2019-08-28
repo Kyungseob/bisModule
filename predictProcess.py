@@ -58,7 +58,7 @@ def predict(file, dayType, dirType, intPath):
         graph, session, model = modelDict[dayType][dirType][i];
         with graph.as_default():
             with session.as_default():
-                model.predict(part);
+                pResult = model.predict(part);
         	pResult = np.array(pResult);
         	pResult = pResult.flatten().T;
         	result.append(pResult);
