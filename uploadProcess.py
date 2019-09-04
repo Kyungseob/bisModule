@@ -83,7 +83,7 @@ def makeTT(departure, arrival):
                 if(not pd.isnull(dpArr[i, j])):
                     index = utils.judgeTimeslot(atArr[i, j]);
                     arriveTime = atArr[i, j];
-                    departureTime = dArr[i, j];
+                    departureTime = dpArr[i, j];
                     tripTime = arriveTime - departureTime;
                     if(tripTime < 0 ):
                         arriveTime = arriveTime + 24*60*60;
@@ -117,7 +117,7 @@ def process(xlsFilePath):
     return dayType;
 
 if __name__ == "__main__":
-    files = [f for f in os.listdir(XLS_PATH) if (f.endswith('test_2019-07-31_5413.xls'))];
+    files = [f for f in os.listdir(XLS_PATH) if (f.endswith('_5413.xls'))];
     
     start = time.time();
     for file in files:
