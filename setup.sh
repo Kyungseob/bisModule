@@ -9,15 +9,15 @@ rm -rf ./cookie.txt
 unzip models.zip
 
 for k in 'weekday' 'weekend'
-do
-for j in 'WT' 'TT'
-do
-for i in 1 2 3
-do
-mv ./models/${k}_${j}_model_${i}.h5 ./$k/$j/MODELS/model_downloaded_$i.h5
-done
-done
-done
+    do
+    for j in 'WT' 'TT'
+        do
+        for i in 1 2 3
+            do
+            mv ./models/${k}_${j}_model_${i}.h5 ./${k}/${j}/MODELS/model_${i}.h5
+            done
+        done
+    done
 
 rm -rf ./models
 rm -rf ./models.zip
@@ -39,4 +39,4 @@ curl -L -o ${filename} "https://drive.google.com/uc?export=download&id=${fileid}
 
 python uploadProcess.py
 python avgProcess.py
-python parseCardData.py $filename
+python parseCardData.py ${filename}
