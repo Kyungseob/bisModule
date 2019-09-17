@@ -59,9 +59,9 @@ def predict(file, dayType, dirType, intPath):
         with graph.as_default():
             with session.as_default():
                 pResult = model.predict(part);
-        	pResult = np.array(pResult);
-        	pResult = pResult.flatten().T;
-        	result.append(pResult);
+                pResult = np.array(pResult);
+                pResult = pResult.flatten().T;
+                result.append(pResult);
     result = np.array(result);
     result = np.reshape(result, (arr.shape[0], arr.shape[1]));
     return result;
