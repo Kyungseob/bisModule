@@ -23,7 +23,7 @@ rm -rf ./models
 rm -rf ./models.zip
 
 filename="5413_data.zip"
-fileid="15QwG1k2VuRU0JmdN9YBOnc0vTAvU-UCT"
+fileid="1GYRT69B2GguZhQv7YJjJdtRE_pc4vvSC"
 query=`curl -c ./cookie.txt -s -L "https://drive.google.com/uc?export=download&id=${fileid}" | pup 'a#uc-download-link attr{href}' | sed -e 's/amp;//g'`
 curl -b ./cookie.txt -L -o ${filename} "https://drive.google.com${query}"
 rm -rf ./cookie.txt
