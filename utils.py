@@ -37,6 +37,18 @@ def makeName(fileName):
     result  = dates + '_' + day;
     return result, dayType;
 
+def makeNameFromInput(str):
+    splittedDates = str.split('-')
+    dayType = 'weekday'
+    print(splittedDates)
+    idx = date(int(splittedDates[0]), int(splittedDates[1]), int(splittedDates[2])).weekday()
+    if(idx > 4):
+        dayType = 'weekend'
+    day = days[idx]
+    dates = ''.join(splittedDates)
+    result  = dates + '_' + day + '_table.csv'
+    return result, dayType
+
 def strToUnixTimestamp(str):
     if (pd.isnull(str) or str=='NaT'):
         return float('nan');
