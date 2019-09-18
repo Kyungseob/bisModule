@@ -102,12 +102,13 @@ def makeTT(departure, arrival):
 
 def process(xlsFilePath):
     fileName = os.path.basename(xlsFilePath)
-    subprocess.call(['mv', xlsFilePath, os.path.join(XLS_PATH, fileName)])
+#    subprocess.call(['mv', xlsFilePath, os.path.join(XLS_PATH, fileName)])
     fileName = fileName.split('.xls')[0]
     dtArr, atArr = makeADT(fileName)
     wtArr = makeWT(dtArr, atArr)
     ttArr = makeTT(dtArr, atArr)
     convertedName, dayType = utils.makeName(fileName)
+    print(convertedName)
     
     path = os.path.join(CWD, dayType)
     

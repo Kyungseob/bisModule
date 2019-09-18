@@ -16,7 +16,7 @@ def makeTarget():
     targetFiles = []
     for xlsFile in xlsFiles:
         fileName = xlsFile.split('.xls')[0]
-        fileName, dayType = utils.makeDateFileName(fileName)
+        fileName, dayType = utils.makeName(fileName)
         flag = False
         if(dayType == 'weekday'):
             flag = fileName + '.csv' in weekdayFiles
