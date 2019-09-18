@@ -120,7 +120,7 @@ def getNextDate(dateStr):
     date = datetime.strptime(dateStr, "%Y-%m-%d");
     dayIdx = date.weekday();
     dict = {0: 1, 1:1, 2:1, 3:1, 4:3, 5:1, 6:6}
-    nextDate = date + timedelta(days=dict[dayIdx])
+    nextDate = date + timedelta(days=7+dict[dayIdx])
     return nextDate.strftime("%Y%m%d") + '_' + days[nextDate.weekday()];
 
 def getDayType(fileName):

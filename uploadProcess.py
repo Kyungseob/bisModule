@@ -66,7 +66,7 @@ def makeWT(departure, arrival):
             if(countArr[i][j] != 0):
                 result[i][j] = round(timeslotArr[i, j] / countArr[i, j], 2)
 
-return result
+    return result
 
 
 def makeTT(departure, arrival):

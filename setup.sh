@@ -37,6 +37,8 @@ fileid="172gk_VfvhB1CQT3iGZDMk4ZLAhmiPp0i"
 
 curl -L -o ${filename} "https://drive.google.com/uc?export=download&id=${fileid}"
 
+python parseCardData.py ${filename}
+
 python uploadProcess.py
 python avgProcess.py
-python parseCardData.py ${filename}
+
