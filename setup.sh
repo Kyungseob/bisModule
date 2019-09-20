@@ -22,14 +22,15 @@ for k in 'weekday' 'weekend'
 rm -rf ./models
 rm -rf ./models.zip
 
-
 filename="5413_data.zip"
 fileid="1e8yNORPJxyLyZqf3O4sbWy_d99vfPhR8"
 query=`curl -c ./cookie.txt -s -L "https://drive.google.com/uc?export=download&id=${fileid}" | pup 'a#uc-download-link attr{href}' | sed -e 's/amp;//g'`
 curl -b ./cookie.txt -L -o ${filename} "https://drive.google.com${query}"
 rm -rf ./cookie.txt
 
-unzip 5413_data.zip -d ./xlsFiles
+unzip -j 5413_data.zip -d ./xlsFiles
+
+rm -rf ./xlsFiles/parse.py
 
 rm -rf 5413_data.zip
 
@@ -42,4 +43,7 @@ python parseCardData.py ${filename}
 
 python uploadProcess.py
 python avgProcess.py
+python makePredict.py
+
+rm -rf __MACOSX
 
