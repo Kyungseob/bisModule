@@ -8,3 +8,6 @@ WT*
 TT*
 *.xls
 __MACOSX/*
+.python-version
+cookie.txt
+test.py

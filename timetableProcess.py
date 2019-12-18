@@ -12,7 +12,7 @@ def init(dayType, name):
     if(dayType == 'weekday'):
         internalInit(4*60*60 + 10*60, 23*60*60 + 10*60, 150, 27, 86, dayType, name)
     else:
-        internalInit(4*60*60 + 10*60, 23*60*60 + 10*60, 136, 27, 86, dayType, name)
+        internalInit(4*60*60 + 10*60, 23*60*60 + 10*60, 132, 27, 86, dayType, name)
 
 def internalInit(first, last, tripCount, busCount, stopCount, dayType, name):
     global FIRST_TRIP, LAST_TRIP, TRIP_COUNT, MAX_BUS_COUNT, STOP_COUNT, DEFAULT_PERIOD, ADDED_WEIGHT, TEST_WEIGHT, WEIGHT_MAP, TABLE_DIR, PERIOD_MAP, TIME_MAP, START_MAP, TT_PREDICTION_MAP, WT_PREDICTION_MAP, file
