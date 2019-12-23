@@ -15,9 +15,9 @@ weekendFiles = [f for f in os.listdir(weekendFilesPath) if(f.endswith('.csv'))]
 def makeTarget():
     targetFiles = []
     for xlsFile in xlsFiles:
-	print(xlsFile)
+        print(xlsFile)
         fileName = xlsFile.split('.xls')[0]
-        fileName, dayType, idx = utils.makeName(fileName)
+        fileName, dayType = utils.makeName(fileName)
         flag = False
         if(dayType == 'weekday'):
             flag = fileName + '.csv' in weekdayFiles
@@ -34,8 +34,8 @@ targetFiles.sort()
 if(len(targetFiles)>0):
     import uploadProcess, preprocessProcess, predictProcess, timetableProcess
     for file in targetFiles:
-        dayType, name, idx = uploadProcess.process(os.path.join(xlsFilesPath, file))
+        dayType, name = uploadProcess.process(os.path.join(xlsFilesPath, file))
         preprocessProcess.process(dayType, name)
-        name = predictProcess.process(dayType, name)
+        name, idx = predictProcess.process(dayType, name)
         timetableProcess.init(dayType, name, idx)
         print(timetableProcess.process())

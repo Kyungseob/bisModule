@@ -87,7 +87,7 @@ def process(dayType, name):
     TT_AVG = os.path.join(base, 'TT', 'AVG', baseName + '_AVG.csv')
     WT_AVG = os.path.join(base, 'WT', 'AVG', baseName + '_AVG.csv')
     
-    resultName = utils.getNextDate(baseName) + '.csv'
+    resultName, idx = utils.getNextDate(baseName) + '.csv'
     
     if(os.path.exists(os.path.join(TT_RESULT, resultName)) and os.path.exists(os.path.join(WT_RESULT, resultName))):
         print('predict file aleady exists')
@@ -102,4 +102,4 @@ def process(dayType, name):
     pd.DataFrame(data=ttIntPred).to_csv(os.path.join(TT_RESULT, resultName), index=False)
     pd.DataFrame(data=wtIntPred).to_csv(os.path.join(WT_RESULT, resultName), index=False)
     
-    return resultName
+    return resultName, idx

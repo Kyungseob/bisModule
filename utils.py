@@ -46,7 +46,7 @@ def makeName(fileName):
     day = days[idx]
     dates = ''.join(splittedDates)
     result  = dates + '_' + day
-    return result, dayType, idx
+    return result, dayType
 
 def makeNameFromInput(str):
     splittedDates = str.split('-')
@@ -144,7 +144,7 @@ def getNextDate(dateStr):
     dayIdx = date.weekday()
     dict = {0: 1, 1:1, 2:1, 3:1, 4:3, 5:1, 6:6}
     nextDate = date + timedelta(days=7+dict[dayIdx])
-    return nextDate.strftime("%Y%m%d") + '_' + days[nextDate.weekday()]
+    return nextDate.strftime("%Y%m%d") + '_' + days[nextDate.weekday()], dayIdx
 
 def getDayType(fileName):
     day = fileName.split('_')[1].split('.')[0]

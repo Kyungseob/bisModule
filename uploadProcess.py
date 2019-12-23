@@ -123,7 +123,7 @@ def process(xlsFilePath):
     dtArr, atArr = makeADT(fileName)
     wtArr = makeWT(dtArr, atArr)
     ttArr = makeTT(dtArr, atArr)
-    convertedName, dayType, idx = utils.makeName(fileName)
+    convertedName, dayType = utils.makeName(fileName)
     print(convertedName)
     
     path = os.path.join(CWD, dayType)
@@ -137,7 +137,7 @@ def process(xlsFilePath):
     
     print("file saved")
 
-    return dayType, convertedName, idx
+    return dayType, convertedName
 
 if __name__ == "__main__":
     
