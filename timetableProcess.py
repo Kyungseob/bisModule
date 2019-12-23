@@ -10,11 +10,11 @@ TIMESLOT = 96 # 15miniture for each slot
 
 def init(dayType, name, idx):
     if(dayType == 'weekday'):
-        internalInit(4*60*60 + 20*60, 23*60*60 + 10*60, 156, 27, 86, dayType, name)
+        internalInit(4*60*60 + 20*60, 23*60*60 + 10*60, 156, 26, 86, dayType, name)
+    elif(idx == 5):
+        internalInit(4*60*60 + 20*60, 23*60*60 + 10*60, 132, 22, 86, dayType, name)
     elif(idx == 6):
-        internalInit(4*60*60 + 20*60, 23*60*60 + 10*60, 136, 27, 86, dayType, name)
-    else:
-        internalInit(4*60*60 + 20*60, 23*60*60 + 10*60, 112, 27, 86, dayType, name)
+        internalInit(4*60*60 + 20*60, 23*60*60 + 10*60, 108, 18, 86, dayType, name)
 
 def internalInit(first, last, tripCount, busCount, stopCount, dayType, name):
     global FIRST_TRIP, LAST_TRIP, TRIP_COUNT, MAX_BUS_COUNT, STOP_COUNT, DEFAULT_PERIOD, ADDED_WEIGHT, TEST_WEIGHT, WEIGHT_MAP, TABLE_DIR, PERIOD_MAP, TIME_MAP, START_MAP, TT_PREDICTION_MAP, WT_PREDICTION_MAP, file
@@ -70,7 +70,7 @@ def calcPeriod(startTime):
     
     for i in range(TRIP_COUNT):
         PERIOD_MAP[i] = PERIOD_MAP[i] * 60
-
+    
     PERIOD_MAP = PERIOD_MAP[1:]
     return
 
@@ -191,7 +191,7 @@ def process():
         return os.path.join(TABLE_DIR, fileName + '_table.csv')
     calcPeriod(FIRST_TRIP)
     START_MAP[0] = FIRST_TRIP
-    createTrip(START_MAP[0], 0, False)
+    createTrip(START_MAP[0], 0, True)
     START_MAP[1] = FIRST_TRIP
     createTrip(START_MAP[1], 1, True)
     for i in range(2, TRIP_COUNT-1):
@@ -220,11 +220,11 @@ def process():
         DIFF[i, 2] = round((TIME_MAP[i+1, 0] - TIME_MAP[i, 0])/60, 0)
         for j in range(STOP_COUNT):
             TIME_DIFF[i, j] = int(round(TIME_MAP[i+1, j] - TIME_MAP[i, j], 0) - (DEFAULT_PERIOD + getPeriod(i)))
-
+    
     avg = 0
     for i in range(TIME_MAP.shape[0]-1):
         avg += TIME_MAP[i+1, 0] - TIME_MAP[i, 0]
-
+    
     for i in range(1, TIME_MAP.shape[0]):
         validationMax(TIME_MAP[i,0], i)
 
