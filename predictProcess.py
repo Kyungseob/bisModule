@@ -87,7 +87,8 @@ def process(dayType, name):
     TT_AVG = os.path.join(base, 'TT', 'AVG', baseName + '_AVG.csv')
     WT_AVG = os.path.join(base, 'WT', 'AVG', baseName + '_AVG.csv')
     
-    resultName, idx = utils.getNextDate(baseName) + '.csv'
+    resultName, idx = utils.getNextDate(baseName)
+    resultName += '.csv'
     
     if(os.path.exists(os.path.join(TT_RESULT, resultName)) and os.path.exists(os.path.join(WT_RESULT, resultName))):
         print('predict file aleady exists')
