@@ -5,6 +5,7 @@ import subprocess
 import sys
 import time
 import utils
+from datetime import datetime, timedelta
 
 CWD = os.path.dirname(os.path.abspath(__file__))
 
@@ -15,6 +16,20 @@ TT = os.path.join('TT', 'FILES')
 days = ['MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT', 'SUN']
 TIMESLOT_SIZE = 15 #15 minutes
 TIMESLOT_DIMENSION = int(24*(60/TIMESLOT_SIZE)) #hour * timeslot count per hour
+
+def makeTarget(files):
+    std = datetime.now() - timedelta(days=14)
+    string = '63_' + std.strftime("%Y-%m-%d") + '_5413.xls'
+    targetFiles = []
+    for file in files:
+        if(file > string):
+            targetFiles.append(file)
+    files = list(set(files) - set(targetFiles))
+    return files, targetFiles
+
+def mvSomefiles(files, fromDir, toDir):
+    for file in files:
+        subprocess.call(['mv', os.path.join(fromDir, file), os.path.join(toDir, file)])
 
 #filePath or fileObject;
 def makeADT(fileName):
@@ -104,10 +119,11 @@ def process(xlsFilePath):
     fileName = os.path.basename(xlsFilePath)
 #    subprocess.call(['mv', xlsFilePath, os.path.join(XLS_PATH, fileName)])
     fileName = fileName.split('.xls')[0]
+    print(fileName)
     dtArr, atArr = makeADT(fileName)
     wtArr = makeWT(dtArr, atArr)
     ttArr = makeTT(dtArr, atArr)
-    convertedName, dayType = utils.makeName(fileName)
+    convertedName, dayType, idx = utils.makeName(fileName)
     print(convertedName)
     
     path = os.path.join(CWD, dayType)
@@ -121,21 +137,16 @@ def process(xlsFilePath):
     
     print("file saved")
 
-    return dayType, convertedName
+    return dayType, convertedName, idx
 
 if __name__ == "__main__":
-    files = [f for f in os.listdir(XLS_PATH) if (f.endswith('.xls'))]
+    
+    files = [f for f in os.listdir(XLS_PATH) if ( (f.endswith('.xls')) and not (f.startswith('.')) )]
+    files, targetFiles = makeTarget(files)
+    mvSomefiles(targetFiles, XLS_PATH, CWD)
     
     start = time.time()
     for file in files:
-        fileName = file.split('.xls')[0]
-        dtArr, atArr = makeADT(fileName)
-        wtArr = makeWT(dtArr, atArr)
-        ttArr = makeTT(dtArr, atArr)
-        convertedName, dayType = utils.makeName(fileName)
-        
-        path = os.path.join(CWD, dayType)
-        
-        utils.saveArrToDf(wtArr, os.path.join(path, WT, convertedName + '.csv'))
-        utils.saveArrToDf(ttArr, os.path.join(path, TT, convertedName + '.csv'))
+        process(os.path.join(XLS_PATH, file))
+    mvSomefiles(targetFiles, CWD, XLS_PATH)
     print("upload process : " + str(time.time()-start) + 's')

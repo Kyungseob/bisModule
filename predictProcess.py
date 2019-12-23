@@ -103,14 +103,3 @@ def process(dayType, name):
     pd.DataFrame(data=wtIntPred).to_csv(os.path.join(WT_RESULT, resultName), index=False)
     
     return resultName
-
-if(__name__ == '__main__'):
-    base = os.path.join(CWD, 'weekday');
-    TT_INT = os.path.join(base, 'TT', 'INT');
-    files = [f for f in os.listdir(TT_INT) if(f.endswith('.csv'))];
-    files.sort(reverse=True);
-    targetFile = files[0];
-    dayType = utils.getDayType(targetFile);
-    start = time.time()
-    process(dayType);
-    print("predict process : " + str(time.time() - start) + 's');

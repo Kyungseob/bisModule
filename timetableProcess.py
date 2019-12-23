@@ -8,11 +8,13 @@ import time
 CWD = os.path.dirname(os.path.abspath(__file__))
 TIMESLOT = 96 # 15miniture for each slot
 
-def init(dayType, name):
+def init(dayType, name, idx):
     if(dayType == 'weekday'):
-        internalInit(4*60*60 + 10*60, 23*60*60 + 10*60, 150, 27, 86, dayType, name)
+        internalInit(4*60*60 + 20*60, 23*60*60 + 10*60, 156, 27, 86, dayType, name)
+    elif(idx == 6):
+        internalInit(4*60*60 + 20*60, 23*60*60 + 10*60, 136, 27, 86, dayType, name)
     else:
-        internalInit(4*60*60 + 10*60, 23*60*60 + 10*60, 132, 27, 86, dayType, name)
+        internalInit(4*60*60 + 20*60, 23*60*60 + 10*60, 112, 27, 86, dayType, name)
 
 def internalInit(first, last, tripCount, busCount, stopCount, dayType, name):
     global FIRST_TRIP, LAST_TRIP, TRIP_COUNT, MAX_BUS_COUNT, STOP_COUNT, DEFAULT_PERIOD, ADDED_WEIGHT, TEST_WEIGHT, WEIGHT_MAP, TABLE_DIR, PERIOD_MAP, TIME_MAP, START_MAP, TT_PREDICTION_MAP, WT_PREDICTION_MAP, file
@@ -103,6 +105,9 @@ def createTrip(startTime, tripIdx, flag):
     sTimes = range(int(startTime)-180, int(startTime)+180, 30)
     timeSeries = []
     costSeries = []
+    if(tripIdx != 0):
+        temp = np.zeros((1, STOP_COUNT+1))
+        TIME_MAP = np.concatenate((TIME_MAP, temp), axis=0)
     if(startTime == FIRST_TRIP):
         TIME_MAP[tripIdx,0] = startTime
         for i in range(1, STOP_COUNT):
@@ -110,9 +115,7 @@ def createTrip(startTime, tripIdx, flag):
             TIME_MAP[tripIdx, i] = TIME_MAP[tripIdx, i - 1] + predictionValue(TT_PREDICTION_MAP, TIME_MAP[tripIdx, i - 1], i-1) + predictionValue(WT_PREDICTION_MAP, TIME_MAP[tripIdx, i - 1], i)
         TIME_MAP[tripIdx, STOP_COUNT] = TIME_MAP[tripIdx, STOP_COUNT-1] + 15.0 * 60.0
         return
-    temp = np.zeros((1, STOP_COUNT+1))
-    TIME_MAP = np.concatenate((TIME_MAP, temp), axis=0)
-    if(tripIdx == 123 or flag):
+    if(flag):
         TIME_MAP[tripIdx,0] = startTime
         for i in range(1, STOP_COUNT):
             temp = []
@@ -189,7 +192,9 @@ def process():
     calcPeriod(FIRST_TRIP)
     START_MAP[0] = FIRST_TRIP
     createTrip(START_MAP[0], 0, False)
-    for i in range(1, TRIP_COUNT-1):
+    START_MAP[1] = FIRST_TRIP
+    createTrip(START_MAP[1], 1, True)
+    for i in range(2, TRIP_COUNT-1):
         START_MAP[i] = TIME_MAP[i-1, 0] + DEFAULT_PERIOD + getPeriod(i-1)
         validate = validationMax(START_MAP[i], i)
         flag = False
@@ -199,10 +204,11 @@ def process():
             validate = validationMax(START_MAP[i], i)
             flag = True
         createTrip(START_MAP[i], i, flag)
-        print(str(i+1) + ' trip created!')
-    
-    START_MAP[TRIP_COUNT-1] = TIME_MAP[TRIP_COUNT-2, 0] + DEFAULT_PERIOD + getPeriod(TRIP_COUNT-2) - TEST_WEIGHT
-    createTrip(START_MAP[TRIP_COUNT-1], TRIP_COUNT-1, True)
+    START_MAP[i+1] = LAST_TRIP
+    createTrip(LAST_TRIP, i+1, True)
+
+    #START_MAP[TRIP_COUNT-1] = TIME_MAP[TRIP_COUNT-2, 0] + DEFAULT_PERIOD + getPeriod(TRIP_COUNT-2) - TEST_WEIGHT
+    #createTrip(START_MAP[TRIP_COUNT-1], TRIP_COUNT-1, True)
 
     TIME_DIFF = np.zeros((TIME_MAP.shape[0]-1, STOP_COUNT))
     DIFF = np.zeros((TIME_MAP.shape[0]-1, 3))
