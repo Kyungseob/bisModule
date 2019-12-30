@@ -69,7 +69,7 @@ def calcPeriod(startTime):
         sumOfAll += PERIOD_MAP[i]
     
     for i in range(TRIP_COUNT):
-        PERIOD_MAP[i] = PERIOD_MAP[i] * 60
+        PERIOD_MAP[i] = PERIOD_MAP[i] * 30
     
     PERIOD_MAP = PERIOD_MAP[1:]
     return

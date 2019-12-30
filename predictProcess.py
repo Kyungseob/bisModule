@@ -92,7 +92,7 @@ def process(dayType, name):
     
     if(os.path.exists(os.path.join(TT_RESULT, resultName)) and os.path.exists(os.path.join(WT_RESULT, resultName))):
         print('predict file aleady exists')
-        return resultName
+        return resultName, idx
     
     ttPred = predict(fileName, dayType, 'TT', TT_INT)
     wtPred = predict(fileName, dayType, 'WT', WT_INT)
